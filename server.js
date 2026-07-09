@@ -19,13 +19,13 @@ app.post('/login', (req, res) => {
     const password = req.body.password;
     
     //funcion que itera sobre los usuarios
-    const usuarioEncontrado = usuarios.find(u => u.email === emailRecibido);
+    const usuarioEncontrado = usuarios.find(u => u.email === email);
 
     if (!usuarioEncontrado) {
         return res.status(401).json({ error: "El correo no existe." });
     }
 
-    if (usuarioEncontrado.password !== passwordRecibida) {
+    if (usuarioEncontrado.password !== password) {
         return res.status(401).json({ error: "Contraseña incorrecta." });
     }
 
