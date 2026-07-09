@@ -34,6 +34,12 @@ app.post('/login', (req, res) => {
     return res.status(200).json({ mensaje: "¡Inicio de sesión exitoso!" });
 });
 
+// FUNCION SOLO PARA PROBAR LA PRIMERA VEZ SI FUNCIONA
+app.get('/usuario-uno', (req, res) => {
+    const usuario1 = usuarios[0]; // El primero de tu lista
+    res.json(usuario1);
+});
+
 // 5. Encendemos el servidor en el puerto 3000
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
