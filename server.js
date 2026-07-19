@@ -6,6 +6,11 @@ const app = express();
 app.use(cors()); // Permite que tu HTML se conecte aquí
 app.use(express.json()); // Permite leer la información de los formularios
 
+// Ruta raíz para responder a peticiones de latido (heartbeat) y verificar conexión sin arrojar error 404
+app.get('/', (req, res) => {
+    res.status(200).json({ status: "OK", message: "Servidor en funcionamiento" });
+});
+
 // usuarios
 const usuarios = [
     //cada usuario tendra un token de sesion diferente, contrasena, email y favoritos vacios que el server recordara hasta que este se apague
