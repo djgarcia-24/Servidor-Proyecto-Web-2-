@@ -8,10 +8,10 @@ app.use(express.json()); // Permite leer la información de los formularios
 
 // usuarios
 const usuarios = [
-    //cada usuario tendra un token de sesion diferente
-    { token: 111, email: "admin@correo.com", password: "123" },
-    { token: 222, email: "david@correo.com", password: "456" },
-    { token: 333, email: "invitado@correo.com", password: "789" }
+    //cada usuario tendra un token de sesion diferente, contrasena, email y favoritos vacios que el server recordara hasta que este se apague
+    { token: 111, email: "admin@correo.com", password: "123", favoritos: [] },
+    { token: 222, email: "david@correo.com", password: "456" , favoritos: [] },
+    { token: 333, email: "invitado@correo.com", password: "789" , favoritos: []}
 ];
 
 // permite el inicio de sesion
@@ -35,7 +35,7 @@ app.post('/login', (req, res) => {
 
 
 
-/ FUNCIÓN AUXILIAR: Extraer el token numérico de la petición
+// FUNCIÓN AUXILIAR: Extraer el token numérico de la petición
 function obtenerUsuarioAutenticado(req) {
     const authHeader = req.headers.authorization;
     if (!authHeader) return null;
