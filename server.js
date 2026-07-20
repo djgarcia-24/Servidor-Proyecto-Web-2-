@@ -81,21 +81,32 @@ app.delete('/favoritos/:id', (req, res) => {
     res.json({ mensaje: "Favorito eliminado", favoritos: usuario.favoritos });
 });
 
-// --- RUTA: AÑADIR UN FAVORITO ---
+
+
+
+
+// --- RUTA: AÑADIR O ACTUALIZAR UN FAVORITO ---
 app.post('/favoritos', (req, res) => {
     const usuario = obtenerUsuarioAutenticado(req);
     if (!usuario) return res.status(401).json({ error: "No autorizado." });
 
     const nuevoFavorito = req.body;
     
-    // Evitar duplicados
-    const yaExiste = usuario.favoritos.find(fav => fav.id === nuevoFavorito.id);
-    if (!yaExiste) {
-        usuario.favoritos.push(nuevoFavorito);
+    const yaExiste = usuario.favoritos.find(fav => String(fav.id) === String(nuevoFavorito.id));
+    if (yaExiste) {
+        // Actualizar rating, tracks y metadatos (no ignorar si ya existía)
+        if (nuevoFavorito.rating !== undefined) yaExiste.rating = nuevoFavorito.rating;
+        if (nuevoFavorito.title !== undefined) yaExiste.title = nuevoFavorito.title;
+        if (nuevoFavorito.artist !== undefined) yaExiste.artist = nuevoFavorito.artist;
+        if (nuevoFavorito.cover !== undefined) yaExiste.cover = nuevoFavorito.cover;
+        if (Array.isArray(nuevoFavorito.tracks)) yaExiste.tracks = nuevoFavorito.tracks;
+        return res.json({ mensaje: "Favorito actualizado", favoritos: usuario.favoritos });
     }
 
+    usuario.favoritos.push(nuevoFavorito);
     res.json({ mensaje: "Favorito añadido", favoritos: usuario.favoritos });
 });
+
 
 
 
