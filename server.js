@@ -84,7 +84,6 @@ app.delete('/favoritos/:id', (req, res) => {
 
 
 
-
 // --- RUTA: AÑADIR O ACTUALIZAR UN FAVORITO ---
 app.post('/favoritos', (req, res) => {
     const usuario = obtenerUsuarioAutenticado(req);
@@ -92,19 +91,15 @@ app.post('/favoritos', (req, res) => {
 
     const nuevoFavorito = req.body;
     
-    const yaExiste = usuario.favoritos.find(fav => String(fav.id) === String(nuevoFavorito.id));
-    if (yaExiste) {
-        // Actualizar rating, tracks y metadatos (no ignorar si ya existía)
-        if (nuevoFavorito.rating !== undefined) yaExiste.rating = nuevoFavorito.rating;
-        if (nuevoFavorito.title !== undefined) yaExiste.title = nuevoFavorito.title;
-        if (nuevoFavorito.artist !== undefined) yaExiste.artist = nuevoFavorito.artist;
-        if (nuevoFavorito.cover !== undefined) yaExiste.cover = nuevoFavorito.cover;
-        if (Array.isArray(nuevoFavorito.tracks)) yaExiste.tracks = nuevoFavorito.tracks;
-        return res.json({ mensaje: "Favorito actualizado", favoritos: usuario.favoritos });
+    // Buscar si ya existe para actualizarlo o agregarlo si es nuevo
+    const indiceExiste = usuario.favoritos.findIndex(fav => String(fav.id) === String(nuevoFavorito.id));
+    if (indiceExiste > -1) {
+        usuario.favoritos[indiceExiste] = nuevoFavorito;
+    } else {
+        usuario.favoritos.push(nuevoFavorito);
     }
 
-    usuario.favoritos.push(nuevoFavorito);
-    res.json({ mensaje: "Favorito añadido", favoritos: usuario.favoritos });
+    res.json({ mensaje: "Favorito procesado con éxito", favoritos: usuario.favoritos });
 });
 
 
